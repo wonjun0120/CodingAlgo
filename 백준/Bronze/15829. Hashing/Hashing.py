@@ -9,4 +9,4 @@ r = 31
 m = 1234567891
 l = int(input())
 
-print(sum([x * pow(r, i) for i, x in enumerate(map(to_num, input()))]))
+print(sum([x * pow(r, i) for i, x in enumerate(map(to_num, input()))]) % m)
