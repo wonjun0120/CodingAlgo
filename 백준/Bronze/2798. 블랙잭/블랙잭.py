@@ -1,24 +1,25 @@
 import sys
 
 input = sys.stdin.readline
-n, m = [int(x) for x in input().split(' ')]
-cards = [int(x) for x in input().split(' ')]
+n, m = map(int, input().split())
+cards = list(map(int, input().split()))
 
-cards.sort(reverse=True)
-flag = False
+cards.sort()
+
 max_ans = 0
+for i in range(n - 2):
+    left, right = i + 1, n - 1
 
-for i in range(len(cards)):
-    if flag: break
-    for j in range(i + 1, len(cards)):
-        if flag: break
-        for k in range(j + 1, len(cards)):
-            answer = cards[i] + cards[j] + cards[k]
-            if answer == m:
-                max_ans = answer
-                flag = True
-                break
-            elif answer < m:
-                max_ans = max(answer, max_ans)
+    while left < right:
+        tot = cards[i] + cards[left] + cards[right]
+
+        if tot == m:
+            print(tot)
+            sys.exit(0)
+        elif tot < m:
+            max_ans = max(max_ans, tot)
+            left += 1
+        else:
+            right -= 1
 
 print(max_ans)
