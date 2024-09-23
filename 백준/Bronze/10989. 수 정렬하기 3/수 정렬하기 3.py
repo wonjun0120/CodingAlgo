@@ -1,15 +1,13 @@
 import sys
+input = sys.stdin.readline
 
-N  = int(sys.stdin.readline())
-arr = [0]*10001
+n = int(sys.stdin.readline())
 
-for _ in range(N):
-    num = int(sys.stdin.readline())
-    arr[num] += 1 # arr[num]에 num이 들어온 개수 count 
+num_list = [0] * 10001
+for i in range(n):
+    num_list[(int(input()))] += 1
 
-for i in range(10001): 
-	# arr[i]에 숫자가 들어왔다면 
-    if arr[i] != 0:
-    	# arr[num]에 num이 들어온 개수 만큼 출력 
-        for j in range(arr[i]): 
+for i, num in enumerate(num_list):
+    if num > 0:
+        for _ in range(num):
             print(i)
