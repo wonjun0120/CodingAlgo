@@ -5,8 +5,6 @@ input = sys.stdin.readline
 
 n, k = map(int, input().split())
 
-# deque = collections.deque([])
-
 answer = 0
 queue = [n]
 is_visit = set()
