@@ -6,40 +6,36 @@ input = sys.stdin.readline
 M, N = map(int, input().split())  # 열, 행
 
 store = []
-queue = deque()
-unripe_count = 0
-
-for n in range(N):
-    row = list(map(int, input().split()))
-    for m, val in enumerate(row):
+dq = []
+todo = 0
+for i in range(N):
+    row = list(map(int, input().strip().split()))
+    for j, val in enumerate(row):
         if val == 1:
-            queue.append((n, m, 0))  # (행, 열, 시간)
+            dq.append((i, j))
         elif val == 0:
-            unripe_count += 1
+            todo += 1
     store.append(row)
 
-# 모든 토마토가 익어있다면
-if unripe_count == 0:
-    print(0)
-    sys.exit(0)
+cnt = 0
+while dq:
+    cnt += 1
+    tmp = []
+    for x, y in dq:
+        for dx, dy in [(0,1), (0,-1), (1,0), (-1,0)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < N and 0 <= ny < M:
+                cur = store[nx][ny] 
+                if cur == -1: continue
+                if cur == 0:
+                    store[nx][ny] = 1
+                    todo -= 1
+                    tmp.append((nx, ny))
+    dq = tmp
 
-answer = 0
-dn = [1, -1, 0, 0]
-dm = [0, 0, 1, -1]
-
-while queue:
-    cn, cm, time = queue.popleft()
-    for i in range(4):
-        nn, nm = cn + dn[i], cm + dm[i]
-        if 0 <= nn < N and 0 <= nm < M:
-            if store[nn][nm] == 0:
-                store[nn][nm] = 1
-                unripe_count -= 1
-                queue.append((nn, nm, time + 1))
-                answer = max(answer, time + 1)
-
-# 다 익지 못한 토마토가 있다면
-if unripe_count > 0:
+if todo > 0:
     print(-1)
 else:
-    print(answer)
+    print(cnt - 1)
+
+
