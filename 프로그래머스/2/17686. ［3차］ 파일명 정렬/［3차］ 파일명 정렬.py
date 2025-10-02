@@ -1,23 +1,20 @@
-def split_number(s: str):
-    l = None
+def split_name(s):
+    l, r = -1, -1
+    
     for i, c in enumerate(s):
         if c.isdigit():
-            l = i
+            if l == -1: 
+                l = i
+        elif l != -1:
+            r = i
             break
-
-    if l is None:
-        return s, "", ""
-
-    r = l
-    n = len(s)
-    while r < n and s[r].isdigit():
-        r += 1
-
-    left = s[:l]
-    mid  = s[l:r]
-    right = s[r:]
-    return (left.lower(), int(mid), s)
-
-
+            
+    if r == -1:
+        return [s[:l].lower(), int(s[l:])]
+    return [s[:l].lower(), int(s[l:r]), s[r:]]
+    
 def solution(files):
-    return [x[-1] for x in sorted([split_number(n) for n in files], key=lambda x: (x[0], x[1]))]
+    f = sorted([(split_name(file), file) for file in files], key=lambda x : (x[0][0], x[0][1]))
+    return [el[1] for el in f]
+    
+        
