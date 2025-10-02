@@ -1,18 +1,26 @@
-def change(n, num):
-    if num == 0:
-        return "0"
-    digits = "0123456789ABCDEF"
-    res = []
+def changebase(base, num):
+    numbers = '0123456789ABCDEF'
+    res = ''
+    num = int(num)
+    if num == 0: return '0'
     while num > 0:
-        res.append(digits[num % n])
-        num //= n
-    return ''.join(reversed(res))
-
+        a, b = divmod(num, base)
+        res += numbers[b]
+        num = a
+    
+    return ''.join(reversed(list(res)))
 
 def solution(n, t, m, p):
-    st = ''
-    num = 0
-    while len(st) < t * m:
-        st += change(n, num)
-        num += 1
-    return ''.join(st[i] for i in range(p - 1, t * m, m))
+    s = ''
+    i = 0
+    while len(s) <= (m * (t + 1)):
+        s += changebase(n, i)
+        i += 1
+    
+    # print(s)
+    answer = ''
+    
+    for i in range(p - 1, m * (t - 1) + p, m):
+        answer += s[i]
+    
+    return answer
