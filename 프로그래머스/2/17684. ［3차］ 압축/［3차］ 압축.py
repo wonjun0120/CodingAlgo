@@ -1,23 +1,20 @@
 def solution(msg):
-    word_dict = {}
-    for i, word in enumerate('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 1):
-        word_dict[word] = i
-        
-    # print(word_dict)
-    
-    l, r = 0, 1
-    answer = []
+    book = {k: i for i, k in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1)}
     lst = 27
-    before = -1
+    
+    answer = []
+    l, r = 0, 1
     while l < r and r <= len(msg):
         cur = msg[l:r]
-        if word_dict.get(cur):
-            before = word_dict[cur]
+        if cur == '': continue
+        if cur in book:
             r += 1
         else:
-            word_dict[cur] = lst
-            answer.append(before)
-            l = r - 1
+            answer.append(book[cur[:-1]])
+            book[cur] = lst
             lst += 1
-    answer.append(before)
+            l = r - 1
+    answer.append(book[msg[l:r-1]])
     return answer
+            
+    
