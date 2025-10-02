@@ -1,36 +1,32 @@
-import math
+def changebase(base, num):
+    numbers = '0123456789ABCDEF'
+    
+    res = ''
+    if num == 0: return '0' 
+    while num > 0:
+        a, b = divmod(num, base)
+        res += str(b)
+        num = a
+    return ''.join(reversed(list(res)))
 
-def to_base(n, base):
-    if n == 0: return 0
+def is_prime(num):
+    import math
+    num = int(num)
     
-    digits = "0123456789ABCDE"
-    
-    buf = []
-    while n > 0:
-        n, r = divmod(n, base)
-        buf.append(digits[r])
-    return "".join(reversed(buf))
-
-def is_prime(n):
-    if n == '': return 0
-    n = int(n)
-    if n == 1: return 0
-    elif n == 2: return 1
-    elif n % 2 == 0: return 0
-    
-    limit = math.isqrt(n)
-    i = 3
-    while i <= limit:
-        if n % i == 0:
-            return 0
-        i += 2
-    return 1
-    
+    if num < 2: return False
+    if num == 2 : return True
+    for i in range(3, int(math.sqrt(num) + 1)):
+        if num % i == 0:
+            return False
+    return True
 
 def solution(n, k):
-    kbase = to_base(n, k)
-    print(kbase)
+    num = changebase(k, n).split('0')
+    cnt = 0
+    for el in num:
+        if el == '':
+            continue
+        if is_prime(el):
+            cnt += 1
+    return cnt
     
-    li = kbase.split('0')
-    return sum([is_prime(el) for el in li])
-        
