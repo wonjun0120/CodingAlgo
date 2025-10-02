@@ -1,37 +1,44 @@
-def str2num(s):
-    h, m = s.split(":")
-    return int(h) * 60 + int(m)
+def str2int(s):
+    hh, mm = s.split(":")
+    return int(hh) * 60 + int(mm)
+
+def time2fee(fees, time):
+    btime, bfee, utime, ufee = fees
+    
+    if btime >= time:
+        return bfee
+    
+    time -= btime
+    a, b = divmod(time, utime)
+    if b > 0:
+        a += 1
+    return bfee + (a * ufee)
 
 def solution(fees, records):
-    res_dic = {}
-
+    carfee = {}
+    
     for rec in records:
-        time_str, car, status = rec.split()
-        t = str2num(time_str)
-
-        if car not in res_dic:
-            res_dic[car] = (t if status == "IN" else None, status, 0)
+        time, car, status = rec.split()
+        time = str2int(time)
+        car = int(car)
+        
+        if car not in carfee:
+            carfee[car] = (time, 0)
+        
         else:
-            btime, bstatus, tot = res_dic[car]
+            intime, tot = carfee[car]
+            
             if status == "IN":
-                res_dic[car] = (t, "IN", tot)
-            elif status == "OUT":
-                duration = t - btime  
-                res_dic[car] = (None, "OUT", tot + duration)
+                carfee[car] = (time, tot)
+            else:
+                tot += (time - intime)
+                carfee[car] = (-1, tot)
 
-    END = 23 * 60 + 59
-    for car, (btime, bstatus, tot) in list(res_dic.items()):
-        if bstatus == "IN":
-            res_dic[car] = (None, "OUT", tot + (END - btime))
-
-    base_time, base_fee, unit_time, unit_fee = fees
-
-    def calc_fee(total):
-        if total <= base_time:
-            return base_fee
-        extra = total - base_time
-        units = (extra + unit_time - 1) // unit_time
-        return base_fee + units * unit_fee
-
-    cars = sorted(res_dic.keys())
-    return [calc_fee(res_dic[car][2]) for car in cars]
+    answer = []
+    for car in sorted(carfee.keys()):
+        intime, tot = carfee[car]
+        if intime != -1:
+            tot += (str2int("23:59") - intime)
+        fee = time2fee(fees, tot)
+        answer.append(fee)
+    return answer
