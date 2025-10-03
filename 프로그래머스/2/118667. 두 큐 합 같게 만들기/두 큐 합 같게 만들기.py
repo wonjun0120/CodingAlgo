@@ -1,43 +1,35 @@
 from collections import deque
 
 def solution(queue1, queue2):
-    dq1 = deque(queue1)
-    dq2 = deque(queue2)
-
-    s1 = sum(dq1)
-    s2 = sum(dq2)
+    q1, q2 = deque(queue1), deque(queue2)
+    s1, s2 = sum(q1), sum(q2)
     total = s1 + s2
-
-    if total % 2 == 1:
+    if total % 2 != 0:
         return -1
     target = total // 2
-    max_val = 0
-    if dq1:
-        max_val = max(max_val, max(dq1))
-    if dq2:
-        max_val = max(max_val, max(dq2))
-    if max_val > target:
+
+    if max(queue1 + queue2) > target:
         return -1
 
     if s1 == target:
         return 0
 
-    moves = 0
-    limit = 3 * (len(queue1) + len(queue2))
+    limit = 2 * (len(q1) + len(q2) + 1)
+    cnt = 0
 
-    while moves <= limit and s1 != target:
+    while cnt <= limit and s1 != target:
         if s1 > target:
-            if not dq1:
+            if not q1:
                 return -1
-            x = dq1.popleft()
-            dq2.append(x)
+            x = q1.popleft()
+            q2.append(x)
             s1 -= x
-        else:  
-            if not dq2:  
+        else:
+            if not q2:
                 return -1
-            y = dq2.popleft()
-            dq1.append(y)
-            s1 += y
-        moves += 1
+            x = q2.popleft()
+            q1.append(x)
+            s1 += x
+        cnt += 1
 
-    return moves if s1 == target else -1
+    return cnt if s1 == target else -1
